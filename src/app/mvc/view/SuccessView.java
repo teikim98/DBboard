@@ -21,7 +21,6 @@ public class SuccessView {
 
 	public static void selectByNoPrint(BoardDTO boardDTO) {
 		System.out.println(boardDTO);
-		
 	}
 
 	public static void selectReplyPrint(BoardDTO boardDTO) {

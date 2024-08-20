@@ -70,31 +70,48 @@ public class BoardController {
 	 * 게시물 수정하기
 	 * */
 	public static void boardUpdate(BoardDTO board) {
-		
-		
-		
+		try {
+			boardService.boardUpdate(board);
+			SuccessView.messagePrint("수정되었습니다.");
+		}catch (DMLException e) {
+			FailView.errorMessage(e.getMessage());
+		}
 	}
 	
 	/**
 	 * 게시물 삭제하기 
 	 * */
 	public static void boardDelete(int no) {
-		
-		
+		try {
+			boardService.boardDelete(no);
+			SuccessView.messagePrint("삭제되었습니다.");
+		}catch (DMLException e) {
+			FailView.errorMessage(e.getMessage());
+		}
 	}
 	
 	/**
 	 * 댓글등록하기
 	 * */
 	public static void replyInsert(ReplyDTO replyDTO) {
-		
+		try {
+			boardService.replyInsert(replyDTO);
+			SuccessView.messagePrint("등록되었습니다.");
+		}catch (DMLException e) {
+			FailView.errorMessage(e.getMessage());
+		}
 	}
 
 	/**
 	 * 부모글에 해당하는 댓글정보 가져오기
 	 * */
 	public static void replySelectByParentNo(int boardNo) {
-		
+		try {
+			BoardDTO board = boardService.replySelectByParentNo(boardNo);
+			SuccessView.selectReplyPrint(board);
+		}catch (SearchWrongException e){
+			FailView.errorMessage(e.getMessage());
+		}
 		
 	}
 	

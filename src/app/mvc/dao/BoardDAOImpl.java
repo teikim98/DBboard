@@ -113,30 +113,126 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public int boardInsert(BoardDTO boardDTO) throws DMLException {
-
-		return 0;
-	}
+		Connection con=null;
+		PreparedStatement ps = null;
+		int result = 0;
+		String sql = " insert into board (board_no, subject, writer, content, board_date) values (board_seq.nextval, ?, ?, ?, sysdate)";
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, boardDTO.getSubject());
+			ps.setString(2, boardDTO.getWriter());
+			ps.setString(3, boardDTO.getContent());
+			result = ps.executeUpdate();
+		}catch (SQLException e){
+			e.printStackTrace();
+			throw new DMLException("DB에 문제가 있어 다시 진행해주세요^^");
+		}finally {
+			DBManager.releaseConnection(con,ps);
+		}
+		return result;
+  }
 
 	@Override
 	public int boardUpdate(BoardDTO boardDTO) throws DMLException {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con=null;
+		PreparedStatement ps = null;
+		int result = 0;
+		String sql = "update board set content = ? where board_no = ?";
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, boardDTO.getContent());
+			ps.setInt(2, boardDTO.getBoardNo());
+			result = ps.executeUpdate();
+		}catch (SQLException e){
+			e.printStackTrace();
+			throw new DMLException("DB에 문제가 있어 다시 진행해주세요^^");
+		}finally {
+			DBManager.releaseConnection(con,ps);
+		}
+		return result;
 	}
 
 	@Override
 	public int boardDelete(int boardNo) throws DMLException {
-		return 0;
+		Connection con=null;
+		PreparedStatement ps = null;
+		int result = 0;
+		String sql = "delete from board where board_no = ?";
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, boardNo);
+			result = ps.executeUpdate();
+		}catch (SQLException e){
+			e.printStackTrace();
+			throw new DMLException("DB에 문제가 있어 다시 진행해주세요^^");
+		}finally {
+			DBManager.releaseConnection(con,ps);
+		}
+		return result;
 	}
 
 	@Override
 	public int replyInsert(ReplyDTO replyDTO) throws DMLException {
-		// TODO Auto-generated method stub
-		return 0;
+		Connection con=null;
+		PreparedStatement ps = null;
+		int result = 0;
+		String sql = "insert into reply values(reply_no_seq.nextval , ?, ? , sysdate)";
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, replyDTO.getReplyContent());
+			ps.setInt(2, replyDTO.getBoardNo());
+			result = ps.executeUpdate();
+		}catch (SQLException e){
+			e.printStackTrace();
+			throw new DMLException("DB에 문제가 있어 다시 진행해주세요^^");
+		}finally {
+			DBManager.releaseConnection(con,ps);
+		}
+		return result;
 	}
 
 	@Override
 	public BoardDTO replySelectByParentNo(int boardNo) throws SearchWrongException {
-		return null;
+		Connection con=null;
+		PreparedStatement ps = null;
+		ResultSet rs =null;
+		String sql = "select * from board join reply using(board_no) where board_no=?";
+		try {
+			con = DBManager.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, boardNo);
+			rs = ps.executeQuery();
+			List<ReplyDTO> list = new ArrayList<>();
+			BoardDTO board = null;
+
+			while (rs.next()){
+				ReplyDTO reply = new ReplyDTO(
+						rs.getInt(6),
+						rs.getString(7),
+						rs.getInt(1),
+						rs.getString(8)
+				);
+				list.add(reply);
+					board = new BoardDTO(
+							rs.getInt(1),
+							rs.getString(2),
+							rs.getString(3),
+							rs.getString(4),
+							rs.getString(5),
+							list
+						 	);
+			}
+			return board;
+		}catch (SQLException e){
+			e.printStackTrace();
+			throw new SearchWrongException("DB에 문제가 있어 다시 진행해주세요^^");
+		}finally {
+			DBManager.releaseConnection(con,ps,rs);
+		}
 	}
 	
 	
@@ -144,7 +240,7 @@ public class BoardDAOImpl implements BoardDAO {
 	 * 부모글에 해당하는 댓글정보 가져오기
 	 * */
 	private List<ReplyDTO> replySelect(Connection con ,int boardNo)throws SQLException{
-		
+		//위에서 다 만들어 부렀으요
 		return null;
 	}
 

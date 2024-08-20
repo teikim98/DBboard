@@ -51,31 +51,37 @@ public class BoardServiceImpl implements BoardService {
 		int result = boardDao.boardInsert(boardDTO);
 		if(result==0)
 			throw new DMLException("등록되지않았습니다.");
-
 	}
 
 	@Override
 	public void boardUpdate(BoardDTO boardDTO) throws DMLException {
-		// TODO Auto-generated method stub
-
+		int result = boardDao.boardUpdate(boardDTO);
+		if(result==0)
+			throw new DMLException("수정되지않았습니다.");
 	}
 
 	@Override
 	public void boardDelete(int boardNo) throws DMLException {
-		
+		int result = boardDao.boardDelete(boardNo);
+		if(result==0)
+			throw new DMLException("삭제되지않았습니다.");
 
 	}
 
 	@Override
 	public void replyInsert(ReplyDTO replyDTO) throws DMLException {
-		// TODO Auto-generated method stub
-
+		int result = boardDao.replyInsert(replyDTO);
+		if(result==0)
+			throw new DMLException("등록되지않았습니다.");
 	}
 
 	@Override
 	public BoardDTO replySelectByParentNo(int boardNo) throws SearchWrongException {
-		
-		return null;
+		BoardDTO board = boardDao.replySelectByParentNo(boardNo);
+		if (board == null) {
+			throw new SearchWrongException("검색된 레코드가 없습니다.");
+		}
+		return board;
 	}
 
 }

@@ -23,6 +23,16 @@ public class BoardDTO {
 		this.boardDate = boardDate;
 	}
 
+	public BoardDTO(int boardNo, String subject, String writer, String content, String boardDate,
+			List<ReplyDTO> repliesList) {
+		this.boardNo = boardNo;
+		this.subject = subject;
+		this.writer = writer;
+		this.content = content;
+		this.boardDate = boardDate;
+		this.repliesList = repliesList;
+	}
+
 	public int getBoardNo() {
 		return boardNo;
 	}
